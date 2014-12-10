@@ -5,7 +5,7 @@ from lists.views import home_page
 from django.template.loader import render_to_string
 from lists.models import Item
 
-class ItermModelTest(TestCase):
+class ItemModelTest(TestCase):
     def test_saing_and_retrieving_items(self):
         first_item = Item()
         first_item.text = 'The first (ever) list item'
