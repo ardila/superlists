@@ -16,19 +16,35 @@ class NewVisitorTest(unittest.TestCase):
             self.browser.get('http://localhost:8000')
 
             
-            #He notices the page titela and header mention to-do lists
+            #He notices the page title and header mention to-do lists
             self.assertIn('To-Do', self.browser.title)
+            header_text = self.browser.find_element_by_tag_name('h1').text
+            self.assertIn('To-Do', header_text)
             self.fail('Finish the test!')
 
             #He is invited to enter a to-do item straight away
+            inputbox = self.browser.find_element_by_id('id_new_item')
+            self.assertEqual(
+                inputbox.get_attribute('placeholder'),
+                'Enter a to-do item'
+            )
+             
 
-            #He types 'forget the milk' into a text box
+            #He types 'Remember the milk' into a text box
+            inputbox.send_keys('Remember the milk')
 
             #When he hits enter the page updates and now the page lists
-            #"1: 'forget the milk' as an item in a to-do list
+            #"1: 'Remember the milk' as an item in a to-do list
+            inputbox.send_keys('Buy peacock feathers')
 
+            table = self.browser.find_element_by_id('id_list_table')
+            rows = table.find_elements_by_tag_name('tr')
+            self.assertTrue(
+                any(row.text == '1: Buy peacock feathers' for row in rows)
+            )
             #There is still a text box inviting her to add another item.
             #he enters "take the cannoli'
+            self.fail('Finish the test!')
 
             #The page updates again, and now shows both items on her list
 
@@ -39,7 +55,6 @@ class NewVisitorTest(unittest.TestCase):
             #He visits that URL - his todo list is still there
 
             #Satisfied, he goes back to sleep
+
 if __name__ == '__main__':
-    unittest.main(warnings='ignore')
-
-
+    unittest.main()
