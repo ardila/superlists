@@ -47,6 +47,7 @@ class NewVisitorTest(unittest.TestCase):
 
             #There is still a text box inviting her to add another item.
             #he enters "take the cannoli'
+            inputbox = self.browser.find_element_by_id('id_new_item')
             inputbox.send_keys('take the cannoli')
             inputbox.send_keys(Keys.ENTER)
 
