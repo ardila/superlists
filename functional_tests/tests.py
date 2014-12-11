@@ -67,13 +67,19 @@ class NewVisitorTest(LiveServerTestCase):
             ## We use a new browser session to make sure that no information
             ## of bob's is coming thoguht from cookies etc #
             self.browser.quit()
-            self.browser = webdriver(CHROME_PATH)
+            self.browser = webdriver.Chrome(CHROME_PATH)
 
             # Francis visits the home page. There is no sign of Bob's list
             self.browser.get(self.live_server_url)
             page_text = self.browser.find_element_by_tag_name('body').text
             self.assertNotIn('Remember the milk', page_text)
             self.assertNotIn('take the cannoli', page_text)
+
+            #Francis starts anew list by entering a new item. He is pretty
+            #Boring as well
+            inputbox = self.browser.find_element_by_id('id_new_item')
+            inputbox.send_keys('Buy milk')
+            inputbox.send_keys(Keys.ENTER)
 
             # Francis gets his own unique URL
             francis_list_url = self.browser.current_url
