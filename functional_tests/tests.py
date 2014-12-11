@@ -2,10 +2,14 @@ from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+
+CHROME_PATH = '/Users/ardila/src/tdd_tutorial/chromedriver'
+print super(LiveServerTestCase)
+
 class NewVisitorTest(LiveServerTestCase):
         
         def setUp(self):
-            self.browser = webdriver.Chrome('/Users/ardila/src/tdd_tutorial/chromedriver')
+            self.browser = webdriver.Chrome(CHROME_PATH)
             self.browser.implicitly_wait(3)
         
         def tearDown(self):
@@ -37,10 +41,13 @@ class NewVisitorTest(LiveServerTestCase):
 
             #He types 'Remember the milk' into a text box
             inputbox.send_keys('Remember the milk')
-
-            #When he hits enter the page updates and now the page lists
+            
+            #When he hits enter the page he is taken to a new URL, 
+            #and now the page lists
             #"1: 'Remember the milk' as an item in a to-do list
             inputbox.send_keys(Keys.ENTER)
+            bob_list_url = self.browser.current_url
+            self.assertRegexpMatches(bob_list_url, '/lists/.+')
             self.check_for_row_in_list_table('1: Remember the milk')
 
 
@@ -55,12 +62,28 @@ class NewVisitorTest(LiveServerTestCase):
             self.check_for_row_in_list_table('1: Remember the milk')
             self.check_for_row_in_list_table('2: take the cannoli')
 
-            self.fail('Finish the test!')
+            # Now a new user, Francis, comes along to the site.
 
-            #Bob wonders whether the site will remember her list. Then he sees
-            #That the site has generated a unique URL for her -- there is some
-            #Explanatory text to that effect.
+            ## We use a new browser session to make sure that no information
+            ## of bob's is coming thoguht from cookies etc #
+            self.browser.quit()
+            self.browser = webdriver(CHROME_PATH)
 
-            #He visits that URL - his todo list is still there
+            # Francis visits the home page. There is no sign of Bob's list
+            self.browser.get(self.live_server_url)
+            page_text = self.browser.find_element_by_tag_name('body').text
+            self.assertNotIn('Remember the milk', page_text)
+            self.assertNotIn('take the cannoli', page_text)
 
-            #Satisfied, he goes back to sleep
+            # Francis gets his own unique URL
+            francis_list_url = self.browser.current_url
+            self.assertRegexpMatches(francis_list_url, '/lists/.+')
+            self.assertNotEqual(francis_list_url, bob_list_url)
+
+            # Again, there is no trace of Bob's list
+            page_text = self.browser.find_element_by_tag_name('body').text
+            self.assertNotIn('Remember the milk', page_text)
+            self.assertNotIn('take the cannoli', page_text)
+
+
+            #Satisfied, they both go back to sleep
