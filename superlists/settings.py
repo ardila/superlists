@@ -20,11 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '$au2a^nauwg(#$34^p_hf+w*kv22%#a)4t3+km^n$ml=@6dv=i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False 
+DEBUG = True 
 
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True 
 
-ALLOWED_HOSTS = ['staging.waawwaaw.com']
+ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
