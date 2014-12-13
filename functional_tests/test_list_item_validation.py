@@ -3,7 +3,6 @@ import unittest
 
 class ItemValidationTest(FunctionalTest):
 
-    @unittest.skip("demonstrate skip")
     def test_cannot_add_empty_list_items(self):
         #Bob goes to the home page and accidentally tries to submit
         # an empty list item. He hits enter on the empty input box
